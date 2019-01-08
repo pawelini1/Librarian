@@ -1,0 +1,49 @@
+import Foundation
+
+public enum Category : Equatable {
+  case crime
+  case romanse
+  case other(String)
+  @_implements(Equatable, ==(_:_:)) public static func __derived_enum_equals(_ a: Category, _ b: Category) -> Bool
+}
+import Foundation
+
+public class Librarian {
+  private final let library: Library
+  public init(library: Library)
+  public func giveAnyBook(to client: Client)
+  private func sleep()
+  @objc deinit
+}
+import Foundation
+
+public struct Library {
+  private let books: [Book]
+  public init(books: [Book])
+  public func anyBook() -> Book?
+}
+import Foundation
+
+public struct Book : Equatable {
+  private let title: String
+  private let pageCount: Int
+  private let category: Category
+  public func open()
+  private init(title: String)
+  @_implements(Equatable, ==(_:_:)) public static func __derived_struct_equals(_ a: Book, _ b: Book) -> Bool
+}
+import Foundation
+
+public class Client {
+  internal enum ClientError : Error {
+    case iDontHaveThatBook
+    @_implements(Equatable, ==(_:_:)) internal static func __derived_enum_equals(_ a: Client.ClientError, _ b: Client.ClientError) -> Bool
+    internal var hashValue: Int { get }
+    internal func hash(into hasher: inout Hasher)
+  }
+  private var books: [Book]
+  public func take(book: Book)
+  public func giveBack(book: Book) throws
+  internal init()
+  @objc deinit
+}

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+DUMP_PATH_REGEX=".*-DAST_DUMP_FILE=(\S*).*"
+if [[ "$@" =~ $DUMP_PATH_REGEX ]]; then
+DUMP_PATH=$(echo "$@" | perl -pe "s/$DUMP_PATH_REGEX/\1/g")
+echo "Saving AST dump file to: $DUMP_PATH"
+else
+echo "No AST dump file location provided. To set up custom location please add 'AST_DUMP_FILE=path_to_ast_file' preprocessor macro in the build settings."
+exit 1
+fi
+
+# Modification of the arguments to exclude the ones that are not compatible with AST generation
+ARGS="$@"
+ARGS=$(echo $ARGS | perl -pe 's/-emit-dependencies //g') # option not supported when generating AST
+ARGS=$(echo $ARGS | perl -pe 's/-emit-module //g') # option not supported when generating AST
+ARGS=$(echo $ARGS | perl -pe 's/-emit-module-path \S* -/-/g') # option not supported when generating AST
+ARGS=$(echo $ARGS | perl -pe 's/-emit-objc-header //g') # option not supported when generating AST
+ARGS=$(echo $ARGS | perl -pe 's/-emit-objc-header-path \S* -/-/g') # option not supported when generating AST
+ARGS=$(echo $ARGS | perl -pe 's/-parseable-output //g') # option not supported when generating AST
+ARGS=$(echo $ARGS | perl -pe 's/ -c / /g') # disable compilation
+ARGS=$(echo $ARGS | perl -pe 's/ -j\s?\d* / -j 1000 /g') # number of input files to process
+
+# Regular compilation
+swiftc $@
+
+# Dumping AST Metadata file
+swiftc -print-ast $ARGS > "$DUMP_PATH" 2>&1
