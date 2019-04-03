@@ -1,26 +1,11 @@
 import Foundation
 
-public enum Category : Equatable {
-  case crime
-  case romanse
-  case other(String)
-  @_implements(Equatable, ==(_:_:)) public static func __derived_enum_equals(_ a: Category, _ b: Category) -> Bool
-}
-import Foundation
-
 public class Librarian {
   private final let library: Library
   public init(library: Library)
   public func giveAnyBook(to client: Client)
   private func sleep()
   @objc deinit
-}
-import Foundation
-
-public struct Library {
-  private let books: [Book]
-  public init(books: [Book])
-  public func anyBook() -> Book?
 }
 import Foundation
 
@@ -34,16 +19,33 @@ public struct Book : Equatable {
 }
 import Foundation
 
+public struct Library {
+  private let books: [Book]
+  public init(books: [Book])
+  public func anyBook() -> Book?
+}
+/Users/pawelszymanski/Documents/Repository/Librarian/Librarian/Source/Client.swift:23:27: error: value of type '[Book]' has no member 'firstIndex'
+        guard let index = books.firstIndex(of: book) else {
+                          ^~~~~ ~~~~~~~~~~
+import Foundation
+
 public class Client {
   internal enum ClientError : Error {
     case iDontHaveThatBook
     @_implements(Equatable, ==(_:_:)) internal static func __derived_enum_equals(_ a: Client.ClientError, _ b: Client.ClientError) -> Bool
     internal var hashValue: Int { get }
-    internal func hash(into hasher: inout Hasher)
   }
   private var books: [Book]
   public func take(book: Book)
   public func giveBack(book: Book) throws
-  internal init()
   @objc deinit
+  internal init()
+}
+import Foundation
+
+public enum Category : Equatable {
+  case crime
+  case romanse
+  case other(String)
+  @_implements(Equatable, ==(_:_:)) public static func __derived_enum_equals(_ a: Category, _ b: Category) -> Bool
 }
